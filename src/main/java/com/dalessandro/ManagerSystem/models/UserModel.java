@@ -5,59 +5,85 @@ import com.dalessandro.ManagerSystem.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_users_username", columnNames = "username"),
+                @UniqueConstraint(name = "uk_users_cpf", columnNames = "cpf"),
+                @UniqueConstraint(name = "uk_users_phone", columnNames = "phone"),
+                @UniqueConstraint(name = "uk_users_email", columnNames = "email")
+        }
+)
 @Getter
 @Setter
 public class UserModel implements Serializable {
     public UserModel() {}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 50)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, length = 255)
     private String username;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 14)
     private String cpf;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, length = 20)
     private String phone;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 255)
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, check = @CheckConstraint(constraint = "gender IN ('M', 'F')", name = "chk_user_gender"))
+    @Column(
+            nullable = false,
+            length = 1,
+            columnDefinition = "VARCHAR(1)",
+            check = @CheckConstraint(name = "chk_users_gender", constraint = "gender IN ('M', 'F')")
+    )
     private Gender gender;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String nacionality;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, name = "created_at")
+    @CreationTimestamp
+    @Column(
+            nullable = false,
+            name = "created_at",
+            updatable = false,
+            columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+    )
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, name = "updated_at", check = @CheckConstraint(constraint = "updated_at >= created_at", name = "chk_updated_after_created"))
+    @UpdateTimestamp
+    @Column(
+            nullable = false,
+            name = "updated_at",
+            check = @CheckConstraint(name = "chk_users_updated_after_created", constraint = "updated_at >= created_at"),
+            columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+    )
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private Role role;
 }
-
-
