@@ -1,32 +1,25 @@
 package com.dalessandro.ManagerSystem.models;
 
 import com.dalessandro.ManagerSystem.models.enums.Gender;
+import com.dalessandro.ManagerSystem.models.enums.Role;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class UserModel implements Serializable {
-    public UserModel(
-            String name,
-            String username,
-            String cpf,
-            String phone,
-            LocalDate birthDate,
-            String email,
-            char gender,
-            String nacionality,
-            String password,
-            LocalDate createdAt,
-            LocalDate updatedAt
-    ) {}
+    public UserModel() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -40,7 +33,7 @@ public class UserModel implements Serializable {
     @Column(unique = true, nullable = false)
     private String phone;
 
-    @Column(name = "birth_date", unique = true, nullable = false)
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
     @Column(nullable = false, unique = true)
@@ -57,10 +50,14 @@ public class UserModel implements Serializable {
     private String password;
 
     @Column(nullable = false, name = "created_at")
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, name = "updated_at", check = @CheckConstraint(constraint = "updated_at >= created_at", name = "chk_updated_after_created"))
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 }
 
 
