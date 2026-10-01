@@ -3,11 +3,12 @@ package com.dalessandro.ManagerSystem.models;
 import com.dalessandro.ManagerSystem.models.enums.Gender;
 import com.dalessandro.ManagerSystem.models.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,9 +25,9 @@ import java.time.LocalDateTime;
 )
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserModel implements Serializable {
-    public UserModel() {}
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 50)
@@ -60,7 +61,7 @@ public class UserModel implements Serializable {
     private Gender gender;
 
     @Column(nullable = false, length = 255)
-    private String nacionality;
+    private String nationality;
 
     @Column(nullable = false, length = 255)
     private String password;
@@ -69,8 +70,7 @@ public class UserModel implements Serializable {
     @Column(
             nullable = false,
             name = "created_at",
-            updatable = false,
-            columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+            updatable = false
     )
     private LocalDateTime createdAt;
 
@@ -78,12 +78,36 @@ public class UserModel implements Serializable {
     @Column(
             nullable = false,
             name = "updated_at",
-            check = @CheckConstraint(name = "chk_users_updated_after_created", constraint = "updated_at >= created_at"),
-            columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+            check = @CheckConstraint(name = "chk_users_updated_after_created", constraint = "updated_at >= created_at")
     )
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private Role role;
+
+    public UserModel(
+            Role role,
+            LocalDateTime updatedAt,
+            LocalDateTime createdAt,
+            String password, String nationality,
+            Gender gender, String email,
+            LocalDate birthDate, String phone,
+            String cpf,
+            String username,
+            String name
+    ) {
+        this.role = role;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
+        this.password = password;
+        this.nationality = nationality;
+        this.gender = gender;
+        this.email = email;
+        this.birthDate = birthDate;
+        this.phone = phone;
+        this.cpf = cpf;
+        this.username = username;
+        this.name = name;
+    }
 }
