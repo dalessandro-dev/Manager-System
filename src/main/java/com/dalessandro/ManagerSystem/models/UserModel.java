@@ -33,10 +33,10 @@ public class UserModel implements Serializable {
     @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 50)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false, length = 14)
@@ -48,7 +48,7 @@ public class UserModel implements Serializable {
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -60,10 +60,10 @@ public class UserModel implements Serializable {
     )
     private Gender gender;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String nationality;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String password;
 
     @CreationTimestamp
